@@ -5,7 +5,7 @@ Stwórz tekstową grę RPG z graficznym interfejsem użytkownika (GUI) opartym n
 
 ---
 
-## **🧱 Struktura projektu (zgodnie z MVC + podział na pliki)**:
+## **🧱 Struktura projektu (zgodnie z MVC + podział na pliki)**
 
 ---
 
