@@ -1,0 +1,12 @@
+{
+    "name": "leo",
+    "mode": "klasyczne",
+    "stats": {
+        "punkty_\u017cycia": 3,
+        "si\u0142a": 3,
+        "obrona": 0
+    },
+    "hp": 30,
+    "exp": 10,
+    "level": 2
+}
