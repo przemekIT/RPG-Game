@@ -1,4 +1,5 @@
 import random
+from model.item import HealthPotion, Sword, Armor
 
 
 class Player:
@@ -7,7 +8,8 @@ class Player:
         self.hp = 100
         self.exp = 0
         self.level = 1
-        self.inventory = []
+        #self.inventory = []
+        self.inventory = [HealthPotion(), Sword(), Armor()]
 
         self.attack_min = 5
         self.attack_max = 10

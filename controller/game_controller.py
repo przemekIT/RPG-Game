@@ -1,9 +1,11 @@
 from tkinter import Tk
 from view.game_view import GameView
 from model.character import Player
-from model.location import Forest, Castle, Village
+from model.location import Village, Forest, Castle
 from model.enemy import Goblin, Knight, Dragon
 from tkinter import messagebox
+import random
+
 
 class GameController:
     def __init__(self):
@@ -15,8 +17,10 @@ class GameController:
         )  # Tworzymy widok i przekazujemy do niego główne okno Tkintera
 
         # Lokacje
-        self.locations = {"forest": Forest(), "castle": Castle(), "village": Village()}
-        self.current_location = self.locations["village"]
+        # self.locations = {"forest": Forest(), "castle": Castle(), "village": Village()}
+        # self.current_location = self.locations["village"]
+        self.locations = [Village(), Forest(), Castle()]
+        self.current_location = random.choice(self.locations)
         self.update_view()
 
         self.enemy = None
@@ -67,3 +71,28 @@ class GameController:
         """Uruchomienie gry. Metoda ta wywołuje mainloop() na głównym oknie Tkintera."""
         self.root.mainloop()  # Uruchomienie głównej pętli Tkintera dla GUI
 
+    def open_inventory(self):
+        self.view.show_message("Otwierasz ekwipunek...")
+        inventory_list = "\n".join(
+            [f"{i+1}. {item.name}" for i, item in enumerate(self.player.inventory)]
+        )
+        if not inventory_list:
+            self.view.show_message("Ekwipunek jest pusty.")
+        else:
+            self.view.show_message(f"Twoj ekwipunek to:\n{inventory_list}")
+
+    def talk(self):
+        self.view.show_message("Rozpoczynasz rozmowę...")
+        if hasattr(self.current_location, "npc"):
+            self.view.show_message(self.current_location.npc.talk())
+        else:
+            self.view.show_message("Nikogo tu nie ma do rozmowy.")
+
+    def fight(self):
+        self.enemy = Goblin()
+        self.view.show_message(f"Rozpoczynasz walke z {self.enemy.name}!")
+        self.view.show_fight_interface(self.enemy)
+
+    def change_location(self):
+        self.current_location = random.choice(self.locations)
+        self.view.display_location(self.current_location)
