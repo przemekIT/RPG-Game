@@ -1,6 +1,5 @@
 import random
 
-
 class Enemy:
     def __init__(self, name, hp, attack_min, attack_max):
         self.name = name
@@ -14,6 +13,18 @@ class Enemy:
     def is_alive(self):
         return self.hp > 0
 
+    def special_attack(self, player):
+        # Domyślnie brak specjalnego ataku
+        return None
+
+class Dragon(Enemy):
+    def __init__(self):
+        super().__init__("Smok", 100, 10, 20)
+
+    def special_attack(self, player):
+        damage = 15
+        player.hp -= damage
+        return f"Smok zionie ogniem i zadaje {damage} obrażeń!"
 
 class Goblin(Enemy):
     def __init__(self):
@@ -24,7 +35,3 @@ class Knight(Enemy):
     def __init__(self):
         super().__init__(name="Rycerz", hp=50, attack_min=8, attack_max=15)
 
-
-class Dragon(Enemy):
-    def __init__(self):
-        super().__init__(name="Smok", hp=100, attack_min=15, attack_max=25)

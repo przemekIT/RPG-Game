@@ -3,96 +3,113 @@ from view.game_view import GameView
 from model.character import Player
 from model.location import Village, Forest, Castle
 from model.enemy import Goblin, Knight, Dragon
-from tkinter import messagebox
 import random
 
 
 class GameController:
     def __init__(self):
-        self.root = Tk()  # Tworzymy główne okno Tkintera
+        self.root = Tk()
         self.root.title("RPG Text Game")
         self.player = Player(name="Bohater")
-        self.view = GameView(
-            self.root, self
-        )  # Tworzymy widok i przekazujemy do niego główne okno Tkintera
+        self.view = GameView(self.root, self)
 
         # Lokacje
-        # self.locations = {"forest": Forest(), "castle": Castle(), "village": Village()}
-        # self.current_location = self.locations["village"]
         self.locations = [Village(), Forest(), Castle()]
         self.current_location = random.choice(self.locations)
-        self.update_view()
-
         self.enemy = None
+
+        self.update_view()
 
     def update_view(self):
         self.view.display_location(self.current_location)
         self.view.update_stats(self.player)
 
-    def explore(self):
-        if self.current_location.name == "Las":
-            self.enemy = Goblin()
-        elif self.current_location.name == "Zamek":
-            self.enemy = Knight()
-        elif self.current_location.name == "Wioska":
-            self.enemy = Dragon()
+    def run(self):
+        self.root.mainloop()
 
+    # === EKSPLORACJA ===
+    def explore(self):
+        self.view.show_message("Eksplorujesz teren...")
+        # Szansa na spotkanie wroga
+        encounter_chance = random.random()
+        if encounter_chance < 0.6:  # 60% szansy na walkę
+            self.enemy = random.choice([Goblin(), Knight(), Dragon()])
+            self.start_battle()
+        else:
+            self.view.show_message("Nie znalazłeś żadnych wrogów.")
+    
+    def fight(self):
+        """Rozpocznij losową walkę bez eksploracji."""
+        self.enemy = random.choice([Goblin(), Knight(), Dragon()])
         self.start_battle()
 
+    # === WALKA ===
     def start_battle(self):
-        while self.enemy.is_alive() and self.player.hp > 0:
-            # Ruch gracza
-            self.view.show_message("Twoja kolej! Atakuj!")
-            player_attack = self.player.attack()
-            self.enemy.hp -= player_attack
-            self.view.show_message(
-                f"Zadałeś {player_attack} obrażeń {self.enemy.name}."
-            )
-
-            if not self.enemy.is_alive():
-                self.view.show_message(f"Pokonałeś {self.enemy.name}!")
-                self.player.gain_exp(20)
-                break
-
-            # Ruch przeciwnika
-            enemy_attack = self.enemy.attack()
-            self.player.hp -= enemy_attack
-            self.view.show_message(
-                f"{self.enemy.name} atakuje! Zadał {enemy_attack} obrażeń."
-            )
-
-            if self.player.hp <= 0:
-                self.view.show_message("Zginąłeś! Gra zakończona.")
-                break
-
-        self.update_view()
-
-    def run(self):
-        """Uruchomienie gry. Metoda ta wywołuje mainloop() na głównym oknie Tkintera."""
-        self.root.mainloop()  # Uruchomienie głównej pętli Tkintera dla GUI
-
-    def open_inventory(self):
-        self.view.show_message("Otwierasz ekwipunek...")
-        inventory_list = "\n".join(
-            [f"{i+1}. {item.name}" for i, item in enumerate(self.player.inventory)]
-        )
-        if not inventory_list:
-            self.view.show_message("Ekwipunek jest pusty.")
-        else:
-            self.view.show_message(f"Twoj ekwipunek to:\n{inventory_list}")
-
-    def talk(self):
-        self.view.show_message("Rozpoczynasz rozmowę...")
-        if hasattr(self.current_location, "npc"):
-            self.view.show_message(self.current_location.npc.talk())
-        else:
-            self.view.show_message("Nikogo tu nie ma do rozmowy.")
-
-    def fight(self):
-        self.enemy = Goblin()
-        self.view.show_message(f"Rozpoczynasz walke z {self.enemy.name}!")
+        self.view.show_message(f"Rozpoczynasz walkę z {self.enemy.name}!")
         self.view.show_fight_interface(self.enemy)
 
+    def player_attack(self):
+        if not self.enemy:
+            return
+
+        player_damage = self.player.attack()
+        self.enemy.hp -= player_damage
+        self.view.show_message(f"Zadałeś {player_damage} obrażeń {self.enemy.name}.")
+
+        if not self.enemy.is_alive():
+            self.view.show_message(f"Pokonałeś {self.enemy.name}!")
+            self.player.gain_exp(20)
+            self.enemy = None
+            self.update_view()
+            self.view.restore_main_menu()
+        else:
+            self.enemy_attack()
+
+    def enemy_attack(self):
+        if not self.enemy:
+            return
+
+        enemy_damage = self.enemy.attack()
+        self.player.hp -= enemy_damage
+        self.view.show_message(f"{self.enemy.name} zadał Ci {enemy_damage} obrażeń.")
+
+        if self.player.hp <= 0:
+            self.view.show_message("Zginąłeś! Gra zakończona.")
+            #self.view.disable_buttons()
+            self.view.restore_main_menu()
+
+    def attempt_escape(self):
+        if not self.enemy:
+            return
+
+        chance = random.random()
+        if chance < 0.5:
+            self.view.show_message("Udało Ci się uciec!")
+            self.enemy = None
+            self.update_view()
+        else:
+            self.view.show_message("Nie udało się uciec! Wróg atakuje!")
+            self.enemy_attack()
+
+    # === LOKACJE ===
     def change_location(self):
         self.current_location = random.choice(self.locations)
-        self.view.display_location(self.current_location)
+        self.enemy = None
+        self.update_view()
+
+    # === EKWIPUNEK ===
+    def open_inventory(self):
+        self.view.show_inventory(self.player.inventory)
+
+    def use_item(self, item):
+        item.use(self.player)
+        self.player.inventory.remove(item)
+        self.view.show_message(f"Użyłeś {item.name}!")
+        self.update_view()
+
+    # === ROZMOWY ===
+    def talk(self):
+        if hasattr(self.current_location, "npc") and self.current_location.npc:
+            self.view.show_npc_dialogue(self.current_location.npc)
+        else:
+            self.view.show_message("Nikogo tu nie ma do rozmowy.")
