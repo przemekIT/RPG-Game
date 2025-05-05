@@ -1,0 +1,8 @@
+{
+    "Window":{
+        "title": "Castle RPG",
+        "geometry": "1000x700",
+        "bg": "#3a3a5c"
+    }
+
+}

@@ -1,0 +1,72 @@
+{
+    "Warrior": {
+        "name": "Warrior",
+        "hp": 100,
+        "attack": 10,
+        "defense": 5
+    },
+    "Mage": {
+        "name": "Mage",
+        "hp": 80,
+        "attack": 25,
+        "defense": 5
+    },
+    "Enemies": {
+        "Robber": {
+            "name": "Bandyta",
+            "hp": 50,
+            "attack": 8,
+            "defense": 3,
+            "exp": 20,
+            "description": "Uliczny bandyta uzbrojony w sztylet. Szybki i podstępny."
+        },
+        "Skeleton": {
+            "name": "Szkielet",
+            "hp": 60,
+            "attack": 6,
+            "defense": 2,
+            "exp": 25,
+            "description": "Zmarły człowiek wskrzeszony za pomocą czarnej magii. Jego kości klikają w walce."
+        },
+        "Monster": {
+            "name": "Potwór",
+            "hp": 90,
+            "attack": 12,
+            "defense": 5,
+            "exp": 40,
+            "description": "Straszne stworzenie z bagien, z pazurami i ostrymi zębami."
+        },
+        "Witch": {
+            "name": "Czarownica",
+            "hp": 70,
+            "attack": 10,
+            "defense": 4,
+            "exp": 35,
+            "description": "Mroczna czarodziejka, władająca magicznymi atakami i klątwami."
+        },
+        "Drunkard": {
+            "name": "Pijak",
+            "hp": 40,
+            "attack": 5,
+            "defense": 1,
+            "exp": 15,
+            "description": "Miejscowy awanturnik z tawerny. Często nie rozumie, z kim walczy."
+        },
+        "Werewolf": {
+            "name": "Wampir",
+            "hp": 100,
+            "attack": 15,
+            "defense": 6,
+            "exp": 50,
+            "description": "Człowiek-bestia, niesamowicie szybki i niebezpieczny w walce wręcz."
+        },
+        "DarkKnight": {
+            "name": "Mroczny Rycerz",
+            "hp": 150,
+            "attack": 20,
+            "defense": 10,
+            "exp": 100,
+            "description": "Potężny wojownik w czarnej zbroi, służący ciemnym siłom."
+        }
+    }
+}
