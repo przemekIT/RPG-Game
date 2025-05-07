@@ -1,6 +1,6 @@
 import random
 from model.item import HealthPotion, Sword, Armor
-
+import json
 
 class Player:
     def __init__(self, name):
@@ -13,6 +13,31 @@ class Player:
 
         self.attack_min = 5
         self.attack_max = 10
+    
+    item_classes = {
+    "Health Potion": HealthPotion,
+    "Sword": Sword,
+    "Armor": Armor
+    }
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "hp": self.hp,
+            "exp": self.exp,
+            "level": self.level,
+            "inventory": [item.name for item in self.inventory]
+        }
+    
+    @staticmethod
+    def from_dict(data):
+        name = data["name"]
+        hp = data.get("hp", 100)
+        exp = data.get("exp", 0)
+        level = data.get("level", 1)
+        inventory_names = data.get("inventory", [])
+        inventory = [item_classes[name]() for name in inventory_names if name in item_classes]
+        return Player(name, hp, exp, level, inventory)
 
     def gain_exp(self, amount):
         self.exp += amount
@@ -37,3 +62,12 @@ class Player:
         if item in self.inventory:
             item.use(self)
             self.inventory.remove(item)
+
+def save_player(player, filename="save.json"):
+    with open(filename, "w") as f:
+        json.dump(player.to_dict(), f)
+
+def load_player(filename="save.json"):
+    with open(filename, "r") as f:
+        data = json.load(f)
+        return Player.from_dict(data)

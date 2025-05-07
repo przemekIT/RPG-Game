@@ -41,8 +41,8 @@ class GameView:
         self.explore_button = Button(self.action_frame, text="Eksploruj", width=15, command=self.controller.explore)
         self.explore_button.pack(side=LEFT, padx=5)
 
-        self.inventory_button = Button(self.action_frame, text="Ekwipunek", width=15, command=self.controller.open_inventory)
-        self.inventory_button.pack(side=LEFT, padx=5)
+       # self.inventory_button = Button(self.action_frame, text="Ekwipunek", width=15, command=self.controller.open_inventory)
+       # self.inventory_button.pack(side=LEFT, padx=5)
 
         self.talk_button = Button(self.action_frame, text="Rozmowa", width=15, command=self.controller.talk)
         self.talk_button.pack(side=LEFT, padx=5)
@@ -55,6 +55,28 @@ class GameView:
 
         # === Panel Walki (Ukryty na start) ===
         self.battle_frame = Frame(self.root)
+
+    # === Zapytaj imie ===
+    def prompt_player_name(self, on_submit):
+        name_window = tk.Toplevel(self.root)
+        name_window.title("Wpisz imię")
+        name_window.geometry("300x150")
+        name_window.resizable(False, False)
+
+        label = Label(name_window, text="Podaj imię swojej postaci:")
+        label.pack(pady=10)
+
+        name_entry = tk.Entry(name_window, width=30)
+        name_entry.pack(pady=5)
+
+    def submit_name():
+        name = name_entry.get().strip()
+        if name:
+            name_window.destroy()
+            on_submit(name)  # Wywołaj callback z imieniem
+
+        submit_button = Button(name_window, text="Rozpocznij grę", command=submit_name)
+        submit_button.pack(pady=10)
 
     # --- Funkcje GUI ---
 
@@ -87,12 +109,11 @@ class GameView:
 
     def show_fight_interface(self, enemy):
         print("Wyświetlanie interfejsu walki...")
-    # Ukryj normalne przyciski akcji (np. Eksploruj, Ekwipunek, itp.)
+    # Ukryj normalne przyciski akcji (np. Eksploruj itp.)
         self.clear_action_buttons()
 
         # Wyświetl panel walki
         self.battle_frame.pack(pady=10)
-
         # self.clear_battle_frame()
 
     # Wyświetlenie informacji o wrogu
@@ -100,14 +121,15 @@ class GameView:
         self.enemy_hp_label.pack()
 
     # Przyciski akcji związane z walką
-        self.attack_button = Button(self.battle_frame, text="Atakuj", width=20, command=self.controller.player_attack)
-        self.attack_button.pack(pady=5)
 
-        self.use_potion_button = Button(self.battle_frame, text="Użyj Mikstury", width=20, command=self.controller.use_potion)
-        self.use_potion_button.pack(pady=5)
+        self.attack_button = Button(self.battle_frame, text="Atakuj", width=15, command=self.controller.player_attack)
+        self.attack_button.pack(side=LEFT, padx=5)
 
-        self.run_button = Button(self.battle_frame, text="Uciekaj", width=20, command=self.controller.attempt_escape)
-        self.run_button.pack(pady=5)
+        self.use_potion_button = Button(self.battle_frame, text="Użyj ekwipunek", width=15, command=self.controller.open_inventory)
+        self.use_potion_button.pack(side=LEFT, padx=5)
+
+        self.run_button = Button(self.battle_frame, text="Uciekaj", width=15, command=self.controller.attempt_escape)
+        self.run_button.pack(side=LEFT, padx=5)
 
     def update_enemy_hp(self, enemy):
         if hasattr(self, 'enemy_hp_label'):
@@ -123,8 +145,8 @@ class GameView:
         self.explore_button = Button(self.action_frame, text="Eksploruj", width=15, command=self.controller.explore)
         self.explore_button.pack(side=LEFT, padx=5)
 
-        self.inventory_button = Button(self.action_frame, text="Ekwipunek", width=15, command=self.controller.open_inventory)
-        self.inventory_button.pack(side=LEFT, padx=5)
+        #self.inventory_button = Button(self.action_frame, text="Ekwipunek", width=15, command=self.controller.open_inventory)
+        #self.inventory_button.pack(side=LEFT, padx=5)
 
         self.talk_button = Button(self.action_frame, text="Rozmowa", width=15, command=self.controller.talk)
         self.talk_button.pack(side=LEFT, padx=5)
