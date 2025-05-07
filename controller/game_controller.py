@@ -10,17 +10,24 @@ from model.character import Player, save_player, load_player
 
 class GameController:
     def __init__(self):
-        self.root = tk.Tk()  # Główne okno aplikacji
-        self.root.title("RPG Text Game")
-        self.player = Player(name="Bohater")  
-        self.view = GameView(self.root, self)
-
-        # Lokacje
+        self.root = tk.Tk()
+        self.root.withdraw()  # Ukryj główne okno do czasu startu gry
+        self.player = None
+        self.view = None
         self.locations = [Village(), Forest(), Castle()]
         self.current_location = random.choice(self.locations)
         self.enemy = None
+        # self.root = tk.Tk()  # Główne okno aplikacji
+        # self.root.title("RPG Text Game")
+        # self.player = Player(name="Bohater")  
+        # self.view = GameView(self.root, self)
 
-        self.update_view()
+        # # Lokacje
+        # self.locations = [Village(), Forest(), Castle()]
+        # self.current_location = random.choice(self.locations)
+        # self.enemy = None
+
+        #self.update_view()
 
     def show_start_screen(self):
         """Okno startowe"""
@@ -60,17 +67,30 @@ class GameController:
         start_btn.pack(pady=5)
 
     def start_new_game(self, name_window):
-        """Po kliknięciu przycisku Start, rozpoczynamy nową grę z imieniem bohatera."""
         player_name = self.name_entry.get()
         self.player = Player(player_name)
         save_player(self.player)
-        self.update_view()
-
-        # Zamykanie okna do wpisania imienia
+ 
         name_window.destroy()
-
-        # Po zamknięciu okna z imieniem, uruchamiamy główną pętlę gry
+ 
+        self.root.deiconify()  # Pokaż główne okno
+        self.view = GameView(self.root, self)
+        self.update_view()
         self.view.show_message(f"Nowa gra rozpoczęta dla: {self.player.name}")
+
+
+
+        # """Po kliknięciu przycisku Start, rozpoczynamy nową grę z imieniem bohatera."""
+        # player_name = self.name_entry.get()
+        # self.player = Player(player_name)
+        # save_player(self.player)
+        # self.update_view()
+
+        # # Zamykanie okna do wpisania imienia
+        # name_window.destroy()
+
+        # # Po zamknięciu okna z imieniem, uruchamiamy główną pętlę gry
+        # self.view.show_message(f"Nowa gra rozpoczęta dla: {self.player.name}")
 
         # Uruchomienie głównej pętli gry
         self.run()
