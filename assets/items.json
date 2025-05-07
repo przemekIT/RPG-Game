@@ -1,0 +1,56 @@
+{
+    "weapons": [
+      {
+        "name": "Sword",
+        "type": "weapon",
+        "description": "Miecz ostry i wyważony. Obrażenia: 15-20.",
+        "stat": "15-20"
+      },
+      {
+        "name": "Axe",
+        "type": "weapon",
+        "description": "Topór ciężki i potężny. Obrażenia: 20-25.",
+        "stat": "20-25"
+      },
+      {
+        "name": "Dagger",
+        "type": "weapon",
+        "description": "Sztylet szybki i lekki. Obrażenia: 8-12.",
+        "stat": "8-12"
+      }
+    ],
+    "armors": [
+      {
+        "name": "Helmet",
+        "type": "armor",
+        "description": "Hełm stalowy. Ochrona: 5.",
+        "stat": "5"
+      },
+      {
+        "name": "Shield",
+        "type": "armor",
+        "description": "Tarcza drewniana. Ochrona: 10.",
+        "stat": "10"
+      },
+      {
+        "name": "Breastplate",
+        "type": "armor",
+        "description": "Pancerz stalowy. Ochrona: 20.",
+        "stat": "20"
+      },
+      {
+        "name": "Boots",
+        "type": "armor",
+        "description": "Buty skórzane. Ochrona: 3.",
+        "stat": "3"
+      }
+    ],
+    "consumables": [
+      {
+        "name": "Health Potion",
+        "type": "consumable",
+        "description": "Mikstura zdrowia. Przywraca 50 punktów życia.",
+        "stat": "50%"
+      }
+    ]
+  }

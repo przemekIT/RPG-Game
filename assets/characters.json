@@ -68,5 +68,58 @@
             "exp": 100,
             "description": "Potężny wojownik w czarnej zbroi, służący ciemnym siłom."
         }
+    },
+    "NPCs": {
+        "Blacksmith": {
+            "name": "Gregor the Blacksmith",
+            "role": "Blacksmith",
+            "description": "A sturdy man with soot-covered hands. He can upgrade your weapons and armor for a fair price.",
+            "services": ["Upgrade Weapons", "Upgrade Armor"],
+            "location": "Castle",
+            "dialogue": [
+                "Looking to sharpen your blade?",
+                "I can strengthen that armor of yours for the right coin.",
+                "Steel is only as strong as the hand that wields it."
+            ]
+        },
+
+        "Healer": {
+            "name": "Mira the Healer",
+            "role": "Healer",
+            "description": "A kind woman who knows the secrets of herbs and healing. She can heal wounds and sell potions.",
+            "services": ["Heal", "Buy Potions"],
+            "location": "Village",
+            "dialogue": [
+                "Your wounds look deep — let me tend to them.",
+                "I have potions that might help you on your journey.",
+                "Even the strongest warriors fall — let me help you stand again."
+            ]
+        },
+
+        "Merchant": {
+            "name": "Tomas the Merchant",
+            "role": "Merchant",
+            "description": "A shrewd trader with goods from distant lands. You can buy or sell items here.",
+            "services": ["Buy Items", "Sell Items"],
+            "location": "Marketplace",
+            "dialogue": [
+                "Take a look — finest goods you'll find anywhere.",
+                "Looking to sell something? Let me see what you've got.",
+                "Gold speaks louder than words, my friend."
+            ]
+        },
+
+        "Traveler": {
+            "name": "Eldrin the Wanderer",
+            "role": "Traveler",
+            "description": "A mysterious traveler who shares stories, rumors, or offers side quests.",
+            "services": ["Give Information", "Offer Side Quest"],
+            "location": "Forest",
+            "dialogue": [
+                "I've walked many roads — perhaps I can share some wisdom.",
+                "There are whispers of hidden treasures nearby.",
+                "A brave soul like you might be interested in a task I know of."
+            ]
+        }
     }
 }
