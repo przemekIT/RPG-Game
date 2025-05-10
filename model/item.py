@@ -8,8 +8,8 @@ class Item:
 
 class HealthPotion(Item):
     def __init__(self):
-        super().__init__("Mikstura zdrowia")
-        self.heal_amount = 20
+        super().__init__("Mikstura zdrowia: + 30 HP")
+        self.heal_amount = 30
 
     def use(self, player):
         player.hp += self.heal_amount
@@ -19,8 +19,8 @@ class HealthPotion(Item):
 
 class Sword(Item):
     def __init__(self):
-        super().__init__("Miecz")
-        self.attack_bonus = 5
+        super().__init__("Miecz: +10 do ataku")
+        self.attack_bonus = 10
 
     def use(self, player):
         player.attack_min += self.attack_bonus
@@ -31,8 +31,8 @@ class Sword(Item):
 
 class Armor(Item):
     def __init__(self):
-        super().__init__("Zbroja")
-        self.defense_bonus = 10
+        super().__init__("Zbroja: + 20 HP")
+        self.defense_bonus = 20
 
     def use(self, player):
         player.hp += self.defense_bonus

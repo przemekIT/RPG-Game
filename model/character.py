@@ -12,7 +12,7 @@ class Player:
         self.inventory = [HealthPotion(), Sword(), Armor()]
 
         self.attack_min = 5
-        self.attack_max = 10
+        self.attack_max = 20
     
     item_classes = {
     "Health Potion": HealthPotion,
@@ -46,7 +46,7 @@ class Player:
 
     def level_up(self):
         self.level += 1
-        self.hp += 20
+        #self.hp += 20
         print(f"Awansujesz na poziom {self.level}!")
 
     def attack(self):
@@ -70,4 +70,10 @@ def save_player(player, filename="save.json"):
 def load_player(filename="save.json"):
     with open(filename, "r") as f:
         data = json.load(f)
-        return Player.from_dict(data)
+        #return Player.from_dict(data)
+        player = Player(name)
+        player.hp = hp
+        player.exp = exp
+        player.level = level
+        player.inventory = inventory
+        return player
