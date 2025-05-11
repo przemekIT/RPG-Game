@@ -1,110 +1,101 @@
 import tkinter as tk
 from tkinter import Label, Button, Entry
+import json
+import random
+
 from view.game_view import GameView
 from model.character import Player
 from model.location import Village, Forest, Castle
 from model.enemy import Goblin, Knight, Dragon
-import random
-from model.character import Player, save_player, load_player
 from model.item import HealthPotion, Sword, Armor
+
+ITEM_CLASSES = {"HealthPotion": HealthPotion, "Sword": Sword, "Armor": Armor}
+
+LOCATION_CLASSES = {"Wioska": Village, "Las": Forest, "Zamek": Castle}
 
 
 class GameController:
     def __init__(self):
         self.root = tk.Tk()
-        self.root.withdraw()  # Ukryj główne okno do czasu startu gry
+        self.root.withdraw()
         self.player = None
         self.view = None
         self.locations = [Village(), Forest(), Castle()]
         self.current_location = random.choice(self.locations)
         self.enemy = None
 
-    def show_start_screen(self):
-        """Okno startowe"""
-        start_window = tk.Toplevel(self.root)
-        start_window.title("Witaj w RPG game!")
-        start_window.geometry("300x200")
-        start_window.resizable(False, False)
+    def start_new_game(self):
+        self.view.prompt_player_name(self._initialize_game_with_name)
 
-        label = Label(start_window, text="Wybierz opcję:", font=("Arial", 12, "bold"))
-        label.pack(pady=20)
-
-        # Przycisk 'Nowa Gra'
-        new_game_btn = Button(
-            start_window,
-            text="Nowa Gra",
-            width=20,
-            command=lambda: [start_window.destroy(), self.ask_player_name()],
-        )
-        new_game_btn.pack(pady=5)
-
-        # Przycisk 'Wczytaj Grę'
-        load_game_btn = Button(
-            start_window,
-            text="Wczytaj Grę",
-            width=20,
-            command=lambda: [start_window.destroy(), self.load_game()],
-        )
-        load_game_btn.pack(pady=5)
-
-    def ask_player_name(self):
-        """Pole do wpisania imienia bohatera."""
-        name_window = tk.Toplevel(self.root)
-        name_window.title("Wprowadź Imię Bohatera")
-        name_window.geometry("300x150")
-
-        label = Label(name_window, text="Podaj imię bohatera:", font=("Arial", 12))
-        label.pack(pady=20)
-
-        self.name_entry = Entry(name_window, font=("Arial", 12))
-        self.name_entry.pack(pady=5)
-
-        start_btn = Button(
-            name_window,
-            text="Start",
-            width=20,
-            command=lambda: [self.start_new_game(name_window)],
-        )
-        start_btn.pack(pady=5)
-
-    def start_new_game(self, name_window):
-        player_name = self.name_entry.get()
+    def _initialize_game_with_name(self, player_name):
         self.player = Player(player_name)
-        save_player(self.player)
-
-        name_window.destroy()
-
-        self.root.deiconify()  # Pokaż główne okno
-        self.view = GameView(self.root, self)
+        self.root.deiconify()
         self.update_view()
         self.view.show_message(f"Nowa gra rozpoczęta dla: {self.player.name}")
 
-        self.run()
+    def save_game(self, filename="C:/Users/maria/RPG-Game/savegame.json"):
+        print("Zapisuję grę...")
+        data = {
+            "location": self.current_location.name,
+            "player": {
+                "name": self.player.name,
+                "hp": self.player.hp,
+                "level": self.player.level,
+                "exp": self.player.exp,
+                "inventory": [
+                    item.__class__.__name__ for item in self.player.inventory
+                ],
+            },
+        }
 
-    def load_game(self):
-        """Funkcja do wczytania zapisanej gry."""
         try:
-            self.player = load_player()
-            self.update_view()
-            self.view.show_message(
-                f"Wczytano gracza: {self.player.name}, poziom {self.player.level}"
-            )
-        except FileNotFoundError:
-            self.view.show_message(
-                "Nie znaleziono zapisu gry. Tworzenie nowej postaci..."
-            )
-            self.new_game()
+            with open(filename, "w") as f:
+                json.dump(data, f, indent=4)
+                self.view.show_message("Gra została zapisana.")
+        except Exception as e:
+            print(f"Błąd przy zapisie gry: {e}")
+            self.view.show_message(f"Błąd przy zapisie gry: {e}")
+
+    def load_game(self, filename="C:/Users/maria/RPG-Game/savegame.json"):
+        try:
+            with open(filename, "r") as f:
+                data = json.load(f)
+
+            location_name = data["location"]
+            self.current_location = LOCATION_CLASSES[location_name]()
+
+            self.player = Player(data["player"]["name"])
+            self.player.hp = data["player"]["hp"]
+            self.player.level = data["player"]["level"]
+            self.player.exp = data["player"]["exp"]
+            self.player.inventory = [
+                ITEM_CLASSES[name]() for name in data["player"]["inventory"]
+            ]
+
+            if not self.view:
+                self.view = GameView(self.root, self)
+
+            self.root.deiconify()
+
+            self.view.display_location(self.current_location)
+            self.view.update_stats(self.player)
+            self.view.show_message("Gra została wczytana.")
+
+        except Exception as e:
+            if self.view:
+                self.view.show_message(f"Błąd wczytywania gry: {str(e)}")
+            else:
+                print(f"Błąd wczytywania gry: {str(e)}")
 
     def update_view(self):
-        """Aktualizuje widok gry."""
         self.view.display_location(self.current_location)
         self.view.update_stats(self.player)
 
     def run(self):
-        """Uruchamienie głównej pętly gry"""
+        self.view = GameView(self.root, self)
+        self.view.show_start_screen(self.on_new_game, self.on_load_game)
         self.root.mainloop()
 
-    # === EKSPLORACJA ===
     def explore(self):
         self.view.show_message("Eksplorujesz teren...")
         encounter_chance = random.random()
@@ -118,7 +109,6 @@ class GameController:
         self.enemy = random.choice([Goblin(), Knight(), Dragon()])
         self.start_battle()
 
-    # === WALKA ===
     def start_battle(self):
         self.view.show_message(f"Rozpoczynasz walkę z {self.enemy.name}!")
         self.view.show_fight_interface(self.enemy)
@@ -131,14 +121,13 @@ class GameController:
         self.enemy.hp -= player_damage
         self.view.show_message(f"Zadałeś {player_damage} obrażeń {self.enemy.name}.")
         self.view.update_enemy_hp(self.enemy)
-        # self.update_view()
         self.view.update_stats(self.player)
 
         if not self.enemy.is_alive():
             self.view.show_message(
-                f"Pokonałeś {self.enemy.name}! Dostajesz 70 punktow hp i 20 exp. Awansujesz na kolejny poziom!"
+                f"Pokonałeś {self.enemy.name}! Dostajesz 50 punktów HP i 20 EXP. Awansujesz na kolejny poziom!"
             )
-            self.player.hp += 70
+            self.player.hp += 50
             self.player.gain_exp(20)
             reward = random.choice([HealthPotion(), Sword(), Armor(), None])
             if reward:
@@ -146,7 +135,7 @@ class GameController:
                 self.view.show_message(f"Znalazłeś przedmiot: {reward.name}!")
             self.enemy = None
             self.update_view()
-            self.view.restore_main_menu()
+            self.view.show_main_menu()
         else:
             self.enemy_attack()
 
@@ -158,27 +147,22 @@ class GameController:
         self.player.hp -= enemy_damage
         self.view.show_message(f"{self.enemy.name} zadał Ci {enemy_damage} obrażeń.")
         self.view.update_stats(self.player)
+
         if self.player.hp <= 0:
-            # self.view.show_message("Zginąłeś! Gra zakończona. Gra rozpocznie się od nowa za 5 sekund.")
-            # self.root.after(5000, self.restart_game)  # 5000 ms = 5 sekund
             self.view.show_message("Zginąłeś! Gra zakończona.")
             self.view.show_game_over_screen()
         else:
             self.view.show_message("Kontynuuj atak lub spróbuj uciec")
-            self.view.update_stats(self.enemy)
-        # self.view.update_enemy_hp(self.enemy)
-        # self.update_view()
 
     def attempt_escape(self):
         if not self.enemy:
             return
 
-        chance = random.random()
-        if chance < 0.5:
+        if random.random() < 0.5:
             self.view.show_message("Udało Ci się uciec!")
             self.enemy = None
             self.update_view()
-            self.view.restore_main_menu()
+            self.view.show_main_menu()
         else:
             self.view.show_message("Nie udało się uciec! Wróg atakuje!")
             self.enemy_attack()
@@ -195,17 +179,15 @@ class GameController:
         item.use(self.player)
         self.player.inventory.remove(item)
         self.view.show_message(f"Użyłeś {item.name}!")
+
         if item.name == "Mikstura zdrowia":
             self.view.show_message(f"Przywrócono {item.heal_amount} HP.")
         elif item.name == "Miecz":
             self.view.show_message(f"Twoje obrażenia wzrosły o {item.attack_bonus}")
         elif item.name == "Zbroja":
-            self.view.show_message(
-                f"Używasz zbroi! Zwiększa to twoje HP o {item.defense_bonus}"
-            )
+            self.view.show_message(f"Zbroja zwiększa twoje HP o {item.defense_bonus}")
+
         self.view.update_stats(self.player)
-        if self.enemy:
-            self.view.update_enemy_hp(self.enemy)
 
     def talk(self):
         if hasattr(self.current_location, "npc") and self.current_location.npc:
@@ -213,17 +195,21 @@ class GameController:
         else:
             self.view.show_message("Nikogo tu nie ma do rozmowy.")
 
-    def talk_to_npc(self, npc):
-        self.view.show_message(f"{npc.name}: {npc.talk}")
-
-        # NPC może dać przedmiot
-        if random.random() < 0.5:  # 50% szansy
-            gift = random.choice([HealthPotion(), Sword(), Armor(), None])
-            self.player.inventory.append(gift)
-            self.view.show_message(f"{npc.name} dał Ci przedmiot: {gift.name}!")
+    # def talk_to_npc(self, npc):
+    #     self.view.show_message(f"{npc.name}: {npc.talk}")
+    #     if random.random() < 0.5:
+    #         gift = random.choice([HealthPotion(), Sword(), Armor(), None])
+    #         if gift:
+    #             self.player.inventory.append(gift)
+    #             self.view.show_message(f"{npc.name} dał Ci przedmiot: {gift.name}!")
 
     def restart_game(self):
-        self.root.destroy()  # Zamknij aktualne okno gry
-        new_game = GameController()  # Utwórz nową instancję kontrolera
-        new_game.show_start_screen()
+        self.root.destroy()
+        new_game = GameController()
         new_game.run()
+
+    def on_new_game(self):
+        self.view.prompt_player_name(self._initialize_game_with_name)
+
+    def on_load_game(self):
+        self.load_game()

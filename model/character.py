@@ -8,17 +8,12 @@ class Player:
         self.hp = 100
         self.exp = 0
         self.level = 1
-        #self.inventory = []
         self.inventory = [HealthPotion(), Sword(), Armor()]
 
         self.attack_min = 5
         self.attack_max = 20
-    
-    item_classes = {
-    "Health Potion": HealthPotion,
-    "Sword": Sword,
-    "Armor": Armor
-    }
+
+    item_classes = {"Health Potion": HealthPotion, "Sword": Sword, "Armor": Armor}
 
     def to_dict(self):
         return {
@@ -26,9 +21,9 @@ class Player:
             "hp": self.hp,
             "exp": self.exp,
             "level": self.level,
-            "inventory": [item.name for item in self.inventory]
+            "inventory": [item.name for item in self.inventory],
         }
-    
+
     @staticmethod
     def from_dict(data):
         name = data["name"]
@@ -36,7 +31,9 @@ class Player:
         exp = data.get("exp", 0)
         level = data.get("level", 1)
         inventory_names = data.get("inventory", [])
-        inventory = [item_classes[name]() for name in inventory_names if name in item_classes]
+        inventory = [
+            item_classes[name]() for name in inventory_names if name in item_classes
+        ]
         return Player(name, hp, exp, level, inventory)
 
     def gain_exp(self, amount):
@@ -46,7 +43,7 @@ class Player:
 
     def level_up(self):
         self.level += 1
-        #self.hp += 20
+        # self.hp += 20
         print(f"Awansujesz na poziom {self.level}!")
 
     def attack(self):
@@ -63,17 +60,18 @@ class Player:
             item.use(self)
             self.inventory.remove(item)
 
-def save_player(player, filename="save.json"):
-    with open(filename, "w") as f:
-        json.dump(player.to_dict(), f)
+# def save_player(player, filename="save.json"):
+#     with open(filename, "w") as f:
+#         json.dump(player.to_dict(), f)
 
-def load_player(filename="save.json"):
-    with open(filename, "r") as f:
-        data = json.load(f)
-        #return Player.from_dict(data)
-        player = Player(name)
-        player.hp = hp
-        player.exp = exp
-        player.level = level
-        player.inventory = inventory
-        return player
+
+# def load_player(filename="save.json"):
+#     with open(filename, "r") as f:
+#         data = json.load(f)
+#         # return Player.from_dict(data)
+#         player = Player(name)
+#         player.hp = hp
+#         player.exp = exp
+#         player.level = level
+#         player.inventory = inventory
+#         return player

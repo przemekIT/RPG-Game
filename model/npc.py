@@ -18,6 +18,6 @@ class NPC:
         return f"{self.name} nie wie, co powiedzieć..."
 
     def give_item(self):
-        if self.can_give_items and random.random() < 0.3:  # 30% szansy
+        if self.can_give_items and random.random() < 0.3:  # 30% szansy 
             return random.choice([HealthPotion(), Sword(), Armor()])
         return None
