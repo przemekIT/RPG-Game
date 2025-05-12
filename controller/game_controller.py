@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import Label, Button, Entry
+
+# from tkinter import Label, Button, Entry
 import json
 import random
 
@@ -96,15 +97,6 @@ class GameController:
         self.view.show_start_screen(self.on_new_game, self.on_load_game)
         self.root.mainloop()
 
-    # def explore(self):
-    #     self.view.show_message("Eksplorujesz teren...")
-    #     encounter_chance = random.random()
-    #     if encounter_chance < 0.3:
-    #         self.enemy = random.choice([Goblin(), Knight(), Dragon()])
-    #         self.start_battle()
-    #     else:
-    #         self.view.show_message("Nie znalazłeś żadnych wrogów... Eksploruj dalej")
-
     def explore(self):
         self.view.show_message("Eksplorujesz teren...")
 
@@ -126,7 +118,10 @@ class GameController:
 
         elif roll < 0.3:
             # Walka z przeciwnikiem
-            self.enemy = random.choice([Goblin(), Knight(), Dragon()])
+            player_level = self.player.level
+            self.enemy = random.choice(
+                [Goblin(player_level), Knight(player_level), Dragon(player_level)]
+            )
             self.start_battle()
 
         else:
@@ -135,13 +130,15 @@ class GameController:
                 "Teren był pusty... ale odpocząłeś i odzyskałeś trochę zdrowia."
             )
             heal = random.randint(5, 10)
-            # self.player.hp = min(self.player.hp + heal, 130)
             self.player.hp = self.player.hp + heal
             self.view.show_message(f"Odzyskałeś {heal} punktów HP.")
             self.view.update_stats(self.player)
 
     def fight(self):
-        self.enemy = random.choice([Goblin(), Knight(), Dragon()])
+        player_level = self.player.level
+        self.enemy = random.choice(
+            [Goblin(player_level), Knight(player_level), Dragon(player_level)]
+        )
         self.start_battle()
 
     def start_battle(self):
@@ -160,7 +157,7 @@ class GameController:
 
         if not self.enemy.is_alive():
             self.view.show_message(
-                f"Pokonałeś {self.enemy.name}! Dostajesz 50 punktów HP i 20 EXP. Awansujesz na kolejny poziom!"
+                f"Pokonałeś {self.enemy.name}! Dostajesz 50 punktów HP i 20 EXP. Awansujesz na kolejny poziom! Zyskałeś więcej HP i siły!"
             )
             self.player.hp += 50
             self.player.gain_exp(20)
@@ -188,11 +185,6 @@ class GameController:
             message = self.enemy.special_attack(self.player)
             if message:
                 self.view.show_message(message)
-
-        # if hasattr(self.enemy, "special_attack") and random.random() < 0.2:  # np. 20% szans
-        #     message = self.enemy.special_attack(self.player)
-        #     if message:
-        #         self.view.show_message(message)
         else:
             enemy_damage = self.enemy.attack()
             self.player.hp -= enemy_damage
@@ -248,14 +240,6 @@ class GameController:
             self.view.show_npc_dialogue(self.current_location.npc)
         else:
             self.view.show_message("Nikogo tu nie ma do rozmowy.")
-
-    # def talk_to_npc(self, npc):
-    #     self.view.show_message(f"{npc.name}: {npc.talk}")
-    #     if random.random() < 0.5:
-    #         gift = random.choice([HealthPotion(), Sword(), Armor(), None])
-    #         if gift:
-    #             self.player.inventory.append(gift)
-    #             self.view.show_message(f"{npc.name} dał Ci przedmiot: {gift.name}!")
 
     def restart_game(self):
         self.root.destroy()

@@ -1,7 +1,6 @@
 import random
 from model.item import HealthPotion, Sword, Armor
 
-
 class NPC:
     def __init__(self, name, dialogues, can_give_items=False):
         self.name = name

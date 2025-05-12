@@ -2,11 +2,11 @@ import random
 
 
 class Enemy:
-    def __init__(self, name, hp, attack_min, attack_max):
+    def __init__(self, name, base_hp, base_min, base_max, player_level=1):
         self.name = name
-        self.hp = hp
-        self.attack_min = attack_min
-        self.attack_max = attack_max
+        self.hp = base_hp + player_level * 5
+        self.attack_min = base_min + player_level
+        self.attack_max = base_max + player_level * 2
 
     def attack(self):
         return random.randint(self.attack_min, self.attack_max)
@@ -15,23 +15,34 @@ class Enemy:
         return self.hp > 0
 
     def special_attack(self, player):
-        # Domyślnie brak specjalnego ataku
         return None
 
 
 class Dragon(Enemy):
-    def __init__(self):
-        super().__init__(name="Smok", hp=100, attack_min=10, attack_max=20)
+    def __init__(self, player_level=1):
+        super().__init__(
+            name="Smok",
+            base_hp=100,
+            base_min=10,
+            base_max=20,
+            player_level=player_level,
+        )
 
     def special_attack(self, player):
-        damage = 15
+        damage = 15 + player.level
         player.hp -= damage
         return f"Smok zionie ogniem i zadaje {damage} obrażeń!"
 
 
 class Goblin(Enemy):
-    def __init__(self):
-        super().__init__(name="Goblin", hp=80, attack_min=5, attack_max=10)
+    def __init__(self, player_level=1):
+        super().__init__(
+            name="Goblin",
+            base_hp=80,
+            base_min=5,
+            base_max=10,
+            player_level=player_level,
+        )
 
     def special_attack(self, player):
         stolen_hp = 10
@@ -41,8 +52,14 @@ class Goblin(Enemy):
 
 
 class Knight(Enemy):
-    def __init__(self):
-        super().__init__(name="Rycerz", hp=110, attack_min=8, attack_max=25)
+    def __init__(self, player_level=1):
+        super().__init__(
+            name="Rycerz",
+            base_hp=110,
+            base_min=8,
+            base_max=25,
+            player_level=player_level,
+        )
 
     def special_attack(self, player):
         damage = random.randint(20, 25)

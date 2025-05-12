@@ -1,14 +1,17 @@
 {
-    "location": "Wioska",
+    "location": "Zamek",
     "player": {
         "name": "Marianna",
-        "hp": 117,
-        "level": 2,
-        "exp": 20,
+        "hp": 122,
+        "level": 5,
+        "exp": 80,
         "inventory": [
             "Sword",
             "Armor",
             "Armor",
+            "Armor",
+            "Armor",
+            "HealthPotion",
             "HealthPotion"
         ]
     }

@@ -85,10 +85,6 @@ class GameView:
         Button(game_over_window, text="Zacznij Nową Grę", width=20, command=lambda: [game_over_window.destroy(), self.controller.restart_game()]).pack(pady=10)
 
     # === Obsługa GUI ===
-    # def clear_window(self):
-    #     for widget in self.root.winfo_children():
-    #         widget.destroy()
-
     def log(self, message):
         self.log_text.config(state="normal")
         self.log_text.insert(END, message + "\n")
@@ -103,7 +99,6 @@ class GameView:
         self.log(f"Jesteś w {location.name}. {location.description}")
 
     def update_stats(self, player):
-        #self.stats_label.config(text=f"{player.name} | HP: {player.hp} | EXP: {player.exp} | Poziom: {player.level}")
         if player.hp < 30:
             fg_color = "darkred"
         elif player.hp < 70:
