@@ -33,7 +33,18 @@ class Goblin(Enemy):
     def __init__(self):
         super().__init__(name="Goblin", hp=80, attack_min=5, attack_max=10)
 
+    def special_attack(self, player):
+        stolen_hp = 10
+        player.hp -= stolen_hp
+        self.hp += stolen_hp
+        return f"Goblin podstępnie kradnie Ci {stolen_hp} HP i leczy siebie!"
+
 
 class Knight(Enemy):
     def __init__(self):
         super().__init__(name="Rycerz", hp=110, attack_min=8, attack_max=25)
+
+    def special_attack(self, player):
+        damage = random.randint(20, 25)
+        player.hp -= damage
+        return f"Rycerz wykonuje miażdżący cios i zadaje {damage} obrażeń!"

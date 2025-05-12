@@ -96,14 +96,49 @@ class GameController:
         self.view.show_start_screen(self.on_new_game, self.on_load_game)
         self.root.mainloop()
 
+    # def explore(self):
+    #     self.view.show_message("Eksplorujesz teren...")
+    #     encounter_chance = random.random()
+    #     if encounter_chance < 0.3:
+    #         self.enemy = random.choice([Goblin(), Knight(), Dragon()])
+    #         self.start_battle()
+    #     else:
+    #         self.view.show_message("Nie znalazłeś żadnych wrogów... Eksploruj dalej")
+
     def explore(self):
         self.view.show_message("Eksplorujesz teren...")
-        encounter_chance = random.random()
-        if encounter_chance < 0.3:
+
+        roll = random.random()
+
+        if roll < 0.15:
+            # Spotkanie NPC (jeśli istnieje w lokalizacji)
+            if hasattr(self.current_location, "npc") and self.current_location.npc:
+                self.view.show_message(f"Spotykasz {self.current_location.npc.name}...")
+                self.talk()
+            else:
+                self.view.show_message("Nikogo nie znalazłeś, ale było spokojnie.")
+
+        elif roll < 0.2:
+            # Znaleziony przedmiot
+            found_item = random.choice([HealthPotion(), Sword(), Armor()])
+            self.player.inventory.append(found_item)
+            self.view.show_message(f"Znalazłeś przedmiot: {found_item.name}!")
+
+        elif roll < 0.3:
+            # Walka z przeciwnikiem
             self.enemy = random.choice([Goblin(), Knight(), Dragon()])
             self.start_battle()
+
         else:
-            self.view.show_message("Nie znalazłeś żadnych wrogów... Eksploruj dalej")
+            # Pusty teren
+            self.view.show_message(
+                "Teren był pusty... ale odpocząłeś i odzyskałeś trochę zdrowia."
+            )
+            heal = random.randint(5, 10)
+            # self.player.hp = min(self.player.hp + heal, 130)
+            self.player.hp = self.player.hp + heal
+            self.view.show_message(f"Odzyskałeś {heal} punktów HP.")
+            self.view.update_stats(self.player)
 
     def fight(self):
         self.enemy = random.choice([Goblin(), Knight(), Dragon()])
@@ -143,16 +178,35 @@ class GameController:
         if not self.enemy:
             return
 
-        enemy_damage = self.enemy.attack()
-        self.player.hp -= enemy_damage
-        self.view.show_message(f"{self.enemy.name} zadał Ci {enemy_damage} obrażeń.")
+        use_special = (
+            hasattr(self.enemy, "special_attack")
+            and callable(getattr(self.enemy, "special_attack"))
+            and (random.random() < 0.2 or self.enemy.hp < 20)
+        )
+
+        if use_special:
+            message = self.enemy.special_attack(self.player)
+            if message:
+                self.view.show_message(message)
+
+        # if hasattr(self.enemy, "special_attack") and random.random() < 0.2:  # np. 20% szans
+        #     message = self.enemy.special_attack(self.player)
+        #     if message:
+        #         self.view.show_message(message)
+        else:
+            enemy_damage = self.enemy.attack()
+            self.player.hp -= enemy_damage
+            self.view.show_message(
+                f"{self.enemy.name} zadał Ci {enemy_damage} obrażeń."
+            )
+
         self.view.update_stats(self.player)
 
         if self.player.hp <= 0:
             self.view.show_message("Zginąłeś! Gra zakończona.")
             self.view.show_game_over_screen()
         else:
-            self.view.show_message("Kontynuuj atak lub spróbuj uciec")
+            self.view.show_message("Kontynuuj atak, użyj ekwipunek lub spróbuj uciec")
 
     def attempt_escape(self):
         if not self.enemy:

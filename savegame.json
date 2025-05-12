@@ -1,15 +1,13 @@
 {
-    "location": "Las",
+    "location": "Wioska",
     "player": {
-        "name": "Mari",
-        "hp": 132,
+        "name": "Marianna",
+        "hp": 117,
         "level": 2,
         "exp": 20,
         "inventory": [
-            "HealthPotion",
             "Sword",
             "Armor",
-            "Sword",
             "Armor",
             "HealthPotion"
         ]

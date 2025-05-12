@@ -103,7 +103,15 @@ class GameView:
         self.log(f"Jesteś w {location.name}. {location.description}")
 
     def update_stats(self, player):
-        self.stats_label.config(text=f"{player.name} | HP: {player.hp} | EXP: {player.exp} | Poziom: {player.level}")
+        #self.stats_label.config(text=f"{player.name} | HP: {player.hp} | EXP: {player.exp} | Poziom: {player.level}")
+        if player.hp < 30:
+            fg_color = "darkred"
+        elif player.hp < 70:
+            fg_color = "orange"
+        else:
+            fg_color = "green"
+
+        self.stats_label.config(text=f"{player.name} | HP: {player.hp} | EXP: {player.exp} | Poziom: {player.level}", fg=fg_color)
 
     def clear_action_buttons(self):
         for widget in self.action_frame.winfo_children():

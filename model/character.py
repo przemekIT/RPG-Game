@@ -43,8 +43,10 @@ class Player:
 
     def level_up(self):
         self.level += 1
+        self.attack_min += 1
+        self.attack_max += 2
         # self.hp += 20
-        print(f"Awansujesz na poziom {self.level}!")
+        print(f"Awansujesz na poziom {self.level}! Zyskałeś więcej HP i siły!")
 
     def attack(self):
         attack_damage = random.randint(self.attack_min, self.attack_max)
