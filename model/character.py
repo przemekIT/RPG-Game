@@ -1,8 +1,6 @@
 import random
 from model.item import HealthPotion, Sword, Armor
 
-# import json
-
 
 class Player:
     def __init__(self, name):
@@ -45,8 +43,8 @@ class Player:
 
     def level_up(self):
         self.level += 1
-        self.attack_min += 1
-        self.attack_max += 2
+        self.attack_min += 0
+        self.attack_max += 1
         print(f"Awansujesz na poziom {self.level}! Zyskałeś więcej HP i siły!")
 
     def attack(self):

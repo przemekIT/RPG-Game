@@ -102,7 +102,7 @@ class GameController:
 
         roll = random.random()
 
-        if roll < 0.15:
+        if roll < 0.20:
             # Spotkanie NPC (jeśli istnieje w lokalizacji)
             if hasattr(self.current_location, "npc") and self.current_location.npc:
                 self.view.show_message(f"Spotykasz {self.current_location.npc.name}...")
@@ -110,13 +110,13 @@ class GameController:
             else:
                 self.view.show_message("Nikogo nie znalazłeś, ale było spokojnie.")
 
-        elif roll < 0.2:
+        elif roll < 0.25:
             # Znaleziony przedmiot
             found_item = random.choice([HealthPotion(), Sword(), Armor()])
             self.player.inventory.append(found_item)
             self.view.show_message(f"Znalazłeś przedmiot: {found_item.name}!")
 
-        elif roll < 0.3:
+        elif roll < 0.35:
             # Walka z przeciwnikiem
             player_level = self.player.level
             self.enemy = random.choice(
@@ -129,7 +129,7 @@ class GameController:
             self.view.show_message(
                 "Teren był pusty... ale odpocząłeś i odzyskałeś trochę zdrowia."
             )
-            heal = random.randint(5, 10)
+            heal = random.randint(1, 5)
             self.player.hp = self.player.hp + heal
             self.view.show_message(f"Odzyskałeś {heal} punktów HP.")
             self.view.update_stats(self.player)
@@ -197,6 +197,8 @@ class GameController:
         if self.player.hp <= 0:
             self.view.show_message("Zginąłeś! Gra zakończona.")
             self.view.show_game_over_screen()
+            self.root.withdraw() 
+            #self.view.battle_frame.destroy()
         else:
             self.view.show_message("Kontynuuj atak, użyj ekwipunek lub spróbuj uciec")
 

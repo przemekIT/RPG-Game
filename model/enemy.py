@@ -5,8 +5,11 @@ class Enemy:
     def __init__(self, name, base_hp, base_min, base_max, player_level=1):
         self.name = name
         self.hp = base_hp + player_level * 5
-        self.attack_min = base_min + player_level
-        self.attack_max = base_max + player_level * 2
+        # self.attack_min = base_min + player_level
+        # self.attack_max = base_max + player_level * 2
+        self.attack_min = base_min + (player_level - 1) * 2
+        self.attack_max = base_max + (player_level - 1) * 2
+        self.hp = base_hp + (player_level - 1) * 20
 
     def attack(self):
         return random.randint(self.attack_min, self.attack_max)
