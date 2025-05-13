@@ -1,18 +1,13 @@
 {
-    "location": "Zamek",
+    "location": "Wioska",
     "player": {
-        "name": "rogi",
-        "hp": 53,
-        "level": 3,
-        "exp": 40,
+        "name": "Mari",
+        "hp": 36,
+        "level": 1,
+        "exp": 0,
         "inventory": [
-            "Armor",
             "Sword",
-            "Sword",
-            "Sword",
-            "Armor",
-            "HealthPotion",
-            "HealthPotion"
+            "Armor"
         ]
     }
 }

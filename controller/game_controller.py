@@ -1,6 +1,4 @@
 import tkinter as tk
-
-# from tkinter import Label, Button, Entry
 import json
 import random
 
@@ -11,7 +9,6 @@ from model.enemy import Goblin, Knight, Dragon
 from model.item import HealthPotion, Sword, Armor
 
 ITEM_CLASSES = {"HealthPotion": HealthPotion, "Sword": Sword, "Armor": Armor}
-
 LOCATION_CLASSES = {"Wioska": Village, "Las": Forest, "Zamek": Castle}
 
 
@@ -100,23 +97,25 @@ class GameController:
     def explore(self):
         self.view.show_message("Eksplorujesz teren...")
 
-        roll = random.random()
+        roll = (
+            random.random()
+        )  # Losowanie zdarzenia - liczba zmiennoprzecinkowa z zakresu [0.0, 1.0]
 
         if roll < 0.20:
-            # Spotkanie NPC (jeśli istnieje w lokalizacji)
+            # Spotkanie NPC
             if hasattr(self.current_location, "npc") and self.current_location.npc:
                 self.view.show_message(f"Spotykasz {self.current_location.npc.name}...")
                 self.talk()
             else:
                 self.view.show_message("Nikogo nie znalazłeś, ale było spokojnie.")
 
-        elif roll < 0.25:
+        elif roll < 0.35:
             # Znaleziony przedmiot
             found_item = random.choice([HealthPotion(), Sword(), Armor()])
             self.player.inventory.append(found_item)
             self.view.show_message(f"Znalazłeś przedmiot: {found_item.name}!")
 
-        elif roll < 0.35:
+        elif roll < 0.65:
             # Walka z przeciwnikiem
             player_level = self.player.level
             self.enemy = random.choice(
@@ -161,6 +160,13 @@ class GameController:
             )
             self.player.hp += 50
             self.player.gain_exp(20)
+
+            if self.player.level >= 10:
+                self.view.show_message("Gratulacje! Osiągnąłeś 10 poziom – WYGRAŁEŚ GRĘ!")
+                self.view.show_game_win_screen()
+                self.root.withdraw()
+                return
+            
             reward = random.choice([HealthPotion(), Sword(), Armor(), None])
             if reward:
                 self.player.inventory.append(reward)
@@ -197,8 +203,7 @@ class GameController:
         if self.player.hp <= 0:
             self.view.show_message("Zginąłeś! Gra zakończona.")
             self.view.show_game_over_screen()
-            self.root.withdraw() 
-            #self.view.battle_frame.destroy()
+            self.root.withdraw()
         else:
             self.view.show_message("Kontynuuj atak, użyj ekwipunek lub spróbuj uciec")
 

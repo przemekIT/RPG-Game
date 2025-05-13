@@ -134,7 +134,7 @@ class GameView:
 
     def update_stats(self, player):
         if player.hp < 30:
-            fg_color = "darkred"
+            fg_color = "red"
         elif player.hp < 70:
             fg_color = "orange"
         else:
@@ -291,3 +291,25 @@ class GameView:
         Button(dialogue_window, text="Zakończ", command=dialogue_window.destroy).pack(
             pady=10
         )
+
+
+    def show_game_win_screen(self):
+        win_window = tk.Toplevel(self.root)
+        win_window.title("Wygrana!")
+        win_window.geometry("400x200")
+        win_window.resizable(False, False)
+
+        Label(
+            win_window, text="WYGRAŁEŚ!", font=("Arial", 20, "bold"), fg="green"
+            ).pack(pady=20)
+        Label(win_window, text="Gratulacje, osiągnąłeś maksymalny poziom!", font=("Arial", 12)).pack(pady=10)
+
+        Button(
+            win_window,
+            text="Zagraj ponownie",
+            width=20,
+            command=lambda: [
+            win_window.destroy(),
+            self.controller.restart_game(),
+            ],
+            ).pack(pady=10)

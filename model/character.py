@@ -38,7 +38,7 @@ class Player:
 
     def gain_exp(self, amount):
         self.exp += amount
-        if self.exp >= self.level * 10:
+        if self.level < 10 and self.exp >= self.level * 10:
             self.level_up()
 
     def level_up(self):
