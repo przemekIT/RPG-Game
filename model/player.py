@@ -1,11 +1,15 @@
-class Player():
-    def __init__(self, name, class_name, hp, sp, attack, defense):
-        self.name = name
-        self.class_name = class_name
-        self.hp = hp
-        self.sp = sp
-        self.attack = attack
-        self.defense = defense
+from typing import List, Any
+
+class Player:
+    def __init__(self, name: str, class_name: str, hp: int, sp: int, attack: int, defense: int) -> None:
+        self.name: str = name
+        self.class_name: str = class_name
+        self.hp: int = hp
+        self.sp: int = sp
+        self.attack: int = attack
+        self.defense: int = defense
+        self.inventory: List[Any] = []
+        self.gold: int = 100
 
     def __str__(self) -> str:
         return f"""Player {self.name},
@@ -13,7 +17,8 @@ class Player():
             HP: {self.hp}, 
             SP: {self.sp}, 
             Attack: {self.attack}, 
-            Defence: {self.defense}"""
+            Defence: {self.defense},
+            Gold: {self.gold}"""
     
     def get_name(self) -> str:
         return self.name
@@ -42,5 +47,30 @@ class Player():
                 setattr(self, stat_name, value)
         else:
             raise ValueError(f"Element '{stat_name}' not founded.")
+        
+    def add_item(self, item: Any) -> None:
+        self.inventory.append(item)
+
+    def remove_item(self, index: int)  -> None:
+        if 0 <= index < len(self.inventory):
+            del self.inventory[index]
+        else:
+            raise IndexError("Invalid inventory index")
+
+    def get_inventory(self) -> List[Any]:
+        return self.inventory
+    
+    def add_gold(self, amount: int) -> None:
+        self.gold += amount
+
+    def get_gold(self) -> int:
+        return self.gold
+        
+    def remove_gold(self, amount: int) -> bool:
+        if self.gold >= amount:
+            self.gold -= amount
+            return True
+        else:
+            return False
 
     

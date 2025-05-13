@@ -1,11 +1,11 @@
 class Enemy():
-    def __init__(self, name, hp, attack, defense, exp, description):
-        self.name = name
-        self.hp = hp
-        self.attack = attack
-        self.defense = defense
-        self.exp = exp
-        self.description = description
+    def __init__(self, name: str, hp: int, attack: int, defense: int, exp: int, description: str) -> None:
+        self.name: str = name
+        self.hp: int = hp
+        self.attack: int = attack
+        self.defense: int = defense
+        self.exp: int = exp
+        self.description: str = description
 
     def __str__(self) -> str:
         return f"""
@@ -38,7 +38,7 @@ class Enemy():
     def get_description(self) -> str:
         return self.description
     
-    def update_stat(self, stat_name, value) -> None:
+    def update_stat(self, stat_name: str, value: int) -> None:
         if hasattr(self, stat_name):
             if stat_name == "hp":
                 self.hp = max(self.hp - value, 0)

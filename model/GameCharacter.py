@@ -1,31 +1,55 @@
-import json
 from model.player import Player
 from model.enemy import Enemy
 from model.GameNpc import GameNpc
 from model.objects import GameObjects
 import random
-from typing import List
+from typing import Dict, List
 
 class GameCharacter:
-    def __init__(self, data, data_items):
-        self.data = data
-        self.data_items = data_items
+    def __init__(self, data: Dict[str, Dict], data_items: Dict[str, List[Dict]]) -> None:
+        self.data: Dict[str, Dict] = data
+        self.data_items: Dict[str, List[Dict]] = data_items
 
-    def create_player(self, name, class_name) -> List[Player]:
+    def create_player(self, name, class_name) -> Player:
         character_data = self.data.get(class_name)
         if character_data:
-            return Player(
+            self.player = Player(
                 name,
                 character_data['name'], 
                 character_data['hp'], 
                 0,
                 character_data['attack'], 
                 character_data['defense'])
+            return self.player
         else:
-            raise ValueError(f"Character '{self.type}' not found in the data.")
+            raise ValueError(f"Character '{class_name}' not found in the data.")
     
     def get_player(self) -> Player:
         return self.player
+    
+    def load_player(self, data: dict):
+        player = Player(
+            name=data.get("name", ""),
+            class_name=data.get("class_name", ""),
+            hp=data.get("hp", 100),
+            sp=data.get("sp", 0),
+            attack=data.get("attack", 10),
+            defense=data.get("defence", 5)
+        )
+
+        player.gold = data.get("gold", 0)
+
+        inventory_data = data.get("inventory", [])
+        for item_dict in inventory_data:
+            item = GameObjects(
+                name=item_dict["name"],
+                type_=item_dict["type"],
+                description=item_dict["description"],
+                stat=item_dict["stat"]
+            )
+            player.add_item(item)
+
+        return player
     
     def create_enemy(self) -> List[Enemy]: 
         enemies_data = self.data["Enemies"]
@@ -74,12 +98,12 @@ class GameCharacter:
         self.items = []
 
         for category in ['weapons', 'armors', 'consumables']:
-            for item_data in self.data.get(category, []):
+            for item_data in self.data_items.get(category, []):
                 item = GameObjects(
                     item_data["name"],
                     item_data["type"],
                     item_data["description"],
-                    item_data["stats"]
+                    item_data["stat"]
                     
                 )
                 self.items.append(item)
@@ -88,5 +112,7 @@ class GameCharacter:
 
     def get_object(self) ->GameObjects:
         return self.items
+    
+    
 
    

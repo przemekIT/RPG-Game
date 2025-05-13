@@ -1,0 +1,33 @@
+{
+    "save1": {
+        "name": "Prosh",
+        "class_name": "Warrior",
+        "hp": 100,
+        "sp": 2,
+        "attack": 25,
+        "defence": 5,
+        "gold": 100,
+        "inventory": [
+            {
+                "name": "Sword",
+                "type": "weapon",
+                "description": "Miecz ostry i wyważony.",
+                "stat": {
+                    "attack": 15
+                }
+            },
+            {
+                "name": "Breastplate",
+                "type": "armor",
+                "description": "Pancerz stalowy.",
+                "stat": {
+                    "attack": 20
+                }
+            }
+        ],
+        "current_zone": "",
+        "zone_steps": 2
+    },
+    "save2": null,
+    "save3": null
+}

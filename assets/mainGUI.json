@@ -1,8 +1,8 @@
 {
     "Window":{
-        "title": "Castle RPG",
+        "title": "Legends of the Castle RPG",
         "geometry": "1000x700",
-        "bg": "#3a3a5c"
+        "bg": "#5e4b3c"
     }
 
 }

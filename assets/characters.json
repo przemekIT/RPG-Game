@@ -100,7 +100,7 @@
             "name": "Tomas the Merchant",
             "role": "Merchant",
             "description": "A shrewd trader with goods from distant lands. You can buy or sell items here.",
-            "services": ["Buy Items", "Sell Items"],
+            "services": ["Buy Items"],
             "location": "Marketplace",
             "dialogue": [
                 "Take a look — finest goods you'll find anywhere.",
