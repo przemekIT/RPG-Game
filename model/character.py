@@ -15,27 +15,6 @@ class Player:
 
     item_classes = {"Health Potion": HealthPotion, "Sword": Sword, "Armor": Armor}
 
-    def to_dict(self):
-        return {
-            "name": self.name,
-            "hp": self.hp,
-            "exp": self.exp,
-            "level": self.level,
-            "inventory": [item.name for item in self.inventory],
-        }
-
-    @staticmethod
-    def from_dict(data):
-        name = data["name"]
-        hp = data.get("hp", 100)
-        exp = data.get("exp", 0)
-        level = data.get("level", 1)
-        inventory_names = data.get("inventory", [])
-        inventory = [
-            item_classes[name]() for name in inventory_names if name in item_classes
-        ]
-        return Player(name, hp, exp, level, inventory)
-
     def gain_exp(self, amount):
         self.exp += amount
         if self.level < 10 and self.exp >= self.level * 10:
@@ -43,9 +22,9 @@ class Player:
 
     def level_up(self):
         self.level += 1
-        self.attack_min += 0
+        #self.attack_min += 0
         self.attack_max += 1
-        print(f"Awansujesz na poziom {self.level}! Zyskałeś więcej HP i siły!")
+        #print(f"Awansujesz na poziom {self.level}! Zyskałeś więcej HP i siły!")
 
     def attack(self):
         attack_damage = random.randint(self.attack_min, self.attack_max)
@@ -54,7 +33,7 @@ class Player:
 
     def add_item(self, item):
         self.inventory.append(item)
-        print(f"Zdobyto przedmiot: {item.name}")
+        #print(f"Zdobyto przedmiot: {item.name}")
 
     def use_item(self, item):
         if item in self.inventory:

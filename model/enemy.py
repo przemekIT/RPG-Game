@@ -1,13 +1,12 @@
 import random
 
-
 class Enemy:
     def __init__(self, name, base_hp, base_min, base_max, player_level=1):
         self.name = name
         self.hp = base_hp + player_level * 5
         self.attack_min = base_min + (player_level - 1) * 2
         self.attack_max = base_max + (player_level - 1) * 2
-        self.hp = base_hp + (player_level - 1) * 20
+        #self.hp = base_hp + (player_level - 1) * 20
 
     def attack(self):
         return random.randint(self.attack_min, self.attack_max)
@@ -46,8 +45,8 @@ class Goblin(Enemy):
         )
 
     def special_attack(self, player):
-        stolen_hp = 10
-        player.hp -= stolen_hp
+        stolen_hp = 10 + player.level * 2
+        player.hp -= stolen_hp 
         self.hp += stolen_hp
         return f"Goblin podstępnie kradnie Ci {stolen_hp} HP i leczy siebie!"
 
@@ -63,6 +62,6 @@ class Knight(Enemy):
         )
 
     def special_attack(self, player):
-        damage = random.randint(20, 25)
+        damage = random.randint(20, 25) + player.level
         player.hp -= damage
         return f"Rycerz wykonuje miażdżący cios i zadaje {damage} obrażeń!"

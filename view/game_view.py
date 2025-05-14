@@ -292,7 +292,6 @@ class GameView:
             pady=10
         )
 
-
     def show_game_win_screen(self):
         win_window = tk.Toplevel(self.root)
         win_window.title("Wygrana!")
@@ -301,15 +300,19 @@ class GameView:
 
         Label(
             win_window, text="WYGRAŁEŚ!", font=("Arial", 20, "bold"), fg="green"
-            ).pack(pady=20)
-        Label(win_window, text="Gratulacje, osiągnąłeś maksymalny poziom!", font=("Arial", 12)).pack(pady=10)
+        ).pack(pady=20)
+        Label(
+            win_window,
+            text="Gratulacje, osiągnąłeś maksymalny poziom!",
+            font=("Arial", 12),
+        ).pack(pady=10)
 
         Button(
             win_window,
             text="Zagraj ponownie",
             width=20,
             command=lambda: [
-            win_window.destroy(),
-            self.controller.restart_game(),
+                win_window.destroy(),
+                self.controller.restart_game(),
             ],
-            ).pack(pady=10)
+        ).pack(pady=10)

@@ -31,6 +31,11 @@ class GameController:
         self.update_view()
         self.view.show_message(f"Nowa gra rozpoczęta dla: {self.player.name}")
 
+    def run(self):
+        self.view = GameView(self.root, self)
+        self.view.show_start_screen(self.on_new_game, self.on_load_game)
+        self.root.mainloop()
+
     def save_game(self, filename="C:/Users/maria/RPG-Game/savegame.json"):
         print("Zapisuję grę...")
         data = {
@@ -88,11 +93,6 @@ class GameController:
     def update_view(self):
         self.view.display_location(self.current_location)
         self.view.update_stats(self.player)
-
-    def run(self):
-        self.view = GameView(self.root, self)
-        self.view.show_start_screen(self.on_new_game, self.on_load_game)
-        self.root.mainloop()
 
     def explore(self):
         self.view.show_message("Eksplorujesz teren...")
@@ -161,12 +161,14 @@ class GameController:
             self.player.hp += 50
             self.player.gain_exp(20)
 
-            if self.player.level >= 10:
-                self.view.show_message("Gratulacje! Osiągnąłeś 10 poziom – WYGRAŁEŚ GRĘ!")
+            if self.player.level >= 3:
+                self.view.show_message(
+                    "Gratulacje! Osiągnąłeś 3 poziom – WYGRAŁEŚ GRĘ!"
+                )
                 self.view.show_game_win_screen()
                 self.root.withdraw()
                 return
-            
+
             reward = random.choice([HealthPotion(), Sword(), Armor(), None])
             if reward:
                 self.player.inventory.append(reward)
